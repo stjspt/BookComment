@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h1 class="card-title">Прогресс чтения: {{ book.title }}</h1>
+            <h3 class="card-subtitle mb-3 text-muted">{{ book.author }}</h3>
+
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form.pages_read.label(class="form-control-label") }}
+                            {{ form.pages_read(class="form-control", min=1, max=book.total_pages) }}
+                            <small class="form-text text-muted">
+                                Всего страниц: {{ book.total_pages }}
+                            </small>
+                            {% if form.pages_read.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {% for error in form.pages_read.errors %}
+                                        <small>{{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                        <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn btn-secondary ms-2">Назад</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if chart_data.dates %}
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">График прогресса</h2>
+            <div style="height: 400px;">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        У вас пока нет данных о прогрессе чтения этой книги.
+    </div>
+    {% endif %}
+</div>
+
+{% if chart_data.dates %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_data.dates|tojson }},
+            datasets: [{
+                label: 'Прочитано страниц',
+                data: {{ chart_data.pages|tojson }},
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1,
+                fill: false
+            }, {
+                label: 'Всего страниц',
+                data: Array({{ chart_data.dates|length }}).fill({{ chart_data.total_pages }}),
+                borderColor: 'rgb(255, 99, 132)',
+                borderDash: [5, 5],
+                tension: 0,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: {{ chart_data.total_pages * 1.1|int }}
+                }
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

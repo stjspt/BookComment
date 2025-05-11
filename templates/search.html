@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <form action="{{ url_for('search') }}" method="GET">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control form-control-lg" 
+                           placeholder="Поиск книг по названию или автору..." value="{{ query }}">
+                    <button class="btn btn-primary" type="submit">Найти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if books %}
+    <h2>Результаты поиска</h2>
+    <div class="row">
+        {% for book in books %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if book.cover %}
+                <img src="{{ url_for('static', filename='uploads/' + book.cover) }}" 
+                     class="card-img-top" style="height: 200px; object-fit: contain;">
+                {% endif %}
+                <div class="card-body">
+                    <h3 class="card-title">{{ book.title }}</h3>
+                    <p class="card-text">{{ book.author }}</p>
+                    <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif query %}
+    <div class="alert alert-info">Книги по запросу "{{ query }}" не найдены.</div>
+    {% endif %}
+</div>
+{% endblock %}

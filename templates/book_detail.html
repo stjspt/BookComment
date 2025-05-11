@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="row no-gutters">
+            {% if book.cover %}
+            <div class="col-md-4">
+                <img src="{{ url_for('static', filename='uploads/' + book.cover) }}" class="card-img" alt="Обложка">
+            </div>
+            {% endif %}
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h1 class="card-title">{{ book.title }}</h1>
+                    <h3 class="card-subtitle mb-2 text-muted">{{ book.author }}</h3>
+                    <p class="card-text">Страниц: {{ book.total_pages }}</p>
+                    <a href="{{ url_for('add_review', book_id=book.id) }}" class="btn btn-primary">Добавить рецензию</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Рецензии</h2>
+    {% if not reviews %}
+        <p>Пока нет рецензий. Будьте первым!</p>
+    {% else %}
+        {% for review in reviews %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title">{{ review.user.username }}</h5>
+                    <div class="text-warning">
+                        {% for i in range(review.rating) %}★{% endfor %}
+                        {% for i in range(5 - review.rating) %}☆{% endfor %}
+                    </div>
+                </div>
+                <p class="card-text">{{ review.text }}</p>
+                <p class="card-text"><small class="text-muted">
+                    {{ review.created_at.strftime('%d.%m.%Y %H:%M') }}
+                </small></p>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

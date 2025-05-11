@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron text-center mt-4">
+    <h1 class="display-4">Добро пожаловать в BookComments!</h1>
+    <p class="lead">Ваш персональный трекер чтения и платформа для обсуждения книг</p>
+    <hr class="my-4">
+    <p>Здесь вы можете:</p>
+    <ul class="list-unstyled">
+        <li>📚 Вести учет прочитанных книг</li>
+        <li>📝 Оставлять рецензии и оценки</li>
+        <li>📊 Следить за своим прогрессом</li>
+        <li>🔍 Находить новые интересные книги</li>
+    </ul>
+    <div class="mt-4">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('books_list') }}" role="button">Посмотреть все книги</a>
+        <a class="btn btn-outline-primary btn-lg ml-2" href="{{ url_for('search') }}" role="button">Поиск книг</a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-book fa-3x mb-3 text-primary"></i>
+                    <h3>Библиотека</h3>
+                    <p>Коллекция книг с возможностью добавления новых произведений</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x mb-3 text-success"></i>
+                    <h3>Прогресс</h3>
+                    <p>Графики и статистика вашего чтения</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-comments fa-3x mb-3 text-info"></i>
+                    <h3>Рецензии</h3>
+                    <p>Читайте и пишите отзывы о прочитанных книгах</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

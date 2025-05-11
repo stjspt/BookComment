@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Добавить новую книгу</h2>
+    <hr>
+
+    <form method="POST" action="{{ url_for('add_book') }}" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.title.label(class="form-control-label") }}
+            {{ form.title(class="form-control") }}
+            {% if form.title.errors %}
+                <div class="alert alert-danger mt-2">
+                    {% for error in form.title.errors %}
+                        <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.author.label(class="form-control-label") }}
+            {{ form.author(class="form-control") }}
+            {% if form.author.errors %}
+                <div class="alert alert-danger mt-2">
+                    {% for error in form.author.errors %}
+                        <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.total_pages.label(class="form-control-label") }}
+            {{ form.total_pages(class="form-control", type="number", min="1") }}
+            {% if form.total_pages.errors %}
+                <div class="alert alert-danger mt-2">
+                    {% for error in form.total_pages.errors %}
+                        <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.cover.label(class="form-control-label") }}
+            <div class="custom-file">
+                {{ form.cover(class="custom-file-input") }}
+                <label class="custom-file-label">Выберите обложку (необязательно)...</label>
+            </div>
+            {% if form.cover.errors %}
+                <div class="alert alert-danger mt-2">
+                    {% for error in form.cover.errors %}
+                        <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Добавить книгу</button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('cover').addEventListener('change', function(e) {
+    var fileName = '';
+    if (this.files && this.files.length > 0) {
+        fileName = this.files[0].name;
+    }
+    var label = this.nextElementSibling;
+    label.innerText = fileName || 'Выберите файл...';
+});
+
+document.querySelector('form').addEventListener('submit', function(e) {
+    var fileInput = document.getElementById('cover');
+    if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Пожалуйста, выберите файл обложки!');
+        e.preventDefault();
+    }
+});
+</script>
+
+<style>
+.custom-file-label::after {
+    content: "Обзор";
+}
+.alert-danger small {
+    display: block;
+    margin-top: 5px;
+}
+</style>
+{% endblock %}

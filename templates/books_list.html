@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Все книги</h1>
+
+    <div class="row">
+        {% for book in books %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                {% if book.cover %}
+                <img src="{{ url_for('static', filename='uploads/' + book.cover) }}" class="card-img-top" style="max-height: 200px; object-fit: contain;">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title" style="font-size: 1.8rem;">{{ book.title }}</h2>
+                    <h3 class="card-subtitle mb-3 text-muted" style="font-size: 1.3rem;">{{ book.author }}</h3>
+                    <p class="card-text">
+                        <span class="badge bg-primary">Страниц: {{ book.total_pages }}</span>
+                        <span class="badge bg-success ms-2">Рецензий: {{ book.reviews|length }}</span>
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn btn-primary">Подробнее</a>
+                        <a href="{{ url_for('reading_progress', book_id=book.id) }}" class="btn btn-outline-secondary">
+                            Мой прогресс
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
